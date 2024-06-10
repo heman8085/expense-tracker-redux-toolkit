@@ -1,25 +1,47 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import "./App.css";
+import "./index.css";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Navbar from "./components/assets/Navbar";
+import Home from "./components/pages/Home";
+import Profile from "./components/pages/UserProfile";
+import Auth from "./components/pages/Auth";
+import PremiumFeatures from "./components/assets/PremiumFeatures";
+import { useSelector } from "react-redux";
 
-function App() {
+const App = () => {
+  const isPremium = useSelector((state) => state.theme.isPremium);
+  const isLoggedIn = useSelector((state) => state.auth.user.email !== "");
+  const isUpdateProfile = useSelector((state) => state.auth.isUpdateProfile);
+  const [warning, setWarning] = useState(false);
+
+  useEffect(() => {
+    if (isLoggedIn && isUpdateProfile) {
+      setWarning(true);
+      setTimeout(() => {
+        setWarning(false);
+      }, 5000);
+    }
+  }, [isLoggedIn, isUpdateProfile]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div>
+        <Navbar />
+        <Routes>
+          <Route path="/auth/*" element={<Auth />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
+          {isPremium && <Route path="/premium" element={<PremiumFeatures />} />}
+        </Routes>
+      </div>
+      {warning && (
+        <div className="warning">
+          Your profile is incomplete. Complete it now !!
+        </div>
+      )}
+    </Router>
   );
-}
+};
 
 export default App;
