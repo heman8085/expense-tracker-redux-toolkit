@@ -66,7 +66,7 @@ const Navbar = () => {
               Profile
             </Link>
           )}
-          {isPremium && (
+          {isPremium && isLoggedIn &&(
             <Link
               to="/Premium"
               className="text-white hover:text-gray-300  font-bold"

@@ -164,7 +164,7 @@ const ExpenseList = () => {
                     Delete
                   </button>
                 </div>
-              </div>
+                </div>
             </li>
           )
         )}

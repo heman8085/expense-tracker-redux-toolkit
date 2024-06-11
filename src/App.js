@@ -8,13 +8,16 @@ import Profile from "./components/pages/UserProfile";
 import Auth from "./components/pages/Auth";
 import PremiumFeatures from "./components/assets/PremiumFeatures";
 import { useSelector } from "react-redux";
+import PrivateRoute from "./PrivateRoute";
+import { checkPremiumStatus } from "./components/store/themeSlice";
+
 
 const App = () => {
   const isPremium = useSelector((state) => state.theme.isPremium);
   const isLoggedIn = useSelector((state) => state.auth.user.email !== "");
   const isUpdateProfile = useSelector((state) => state.auth.isUpdateProfile);
   const [warning, setWarning] = useState(false);
-
+  
   useEffect(() => {
     if (isLoggedIn && isUpdateProfile) {
       setWarning(true);
@@ -24,15 +27,24 @@ const App = () => {
     }
   }, [isLoggedIn, isUpdateProfile]);
 
+  useEffect(() => {
+    checkPremiumStatus();
+  }, []);
+  
   return (
     <Router>
       <div>
         <Navbar />
         <Routes>
           <Route path="/auth/*" element={<Auth />} />
-          <Route path="/" element={<Home />} />
-          <Route path="/profile" element={<Profile />} />
-          {isPremium && <Route path="/premium" element={<PremiumFeatures />} />}
+          <Route path="/" element={<PrivateRoute element={Home} />} />
+          <Route path="/profile" element={<PrivateRoute element={Profile} />} />
+          {isPremium && (
+            <Route
+              path="/premium"
+              element={<PrivateRoute element={PremiumFeatures} />}
+            />
+          )}
         </Routes>
       </div>
       {warning && (

@@ -115,7 +115,7 @@ export const signup = createAsyncThunk(
 //email verify
 export const sendVerificationEmail = createAsyncThunk(
   "auth/sendVerificationEmail",
-  async (_, { getState, rejectWithValue }) => {
+  async ({ getState, rejectWithValue }) => {
     try {
       const user = getState().auth.user;
       const response = await fetch(
